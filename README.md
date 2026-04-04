@@ -45,7 +45,7 @@ It provides:
 ## Project Structure
 
 ```text
-is601-module8-assignment/
+is601-module9-assignment/
 ├── app/
 │   └── operations/
 │       └── __init__.py
@@ -121,4 +121,4 @@ docker compose down
 - On successful deploy from main, a new Docker image is pushed to Docker Hub.
 
 Docker Hub repository:
-- https://hub.docker.com/r/jps92/is601-module8-assignment
+- https://hub.docker.com/r/jps92/is601-module9-assignment
