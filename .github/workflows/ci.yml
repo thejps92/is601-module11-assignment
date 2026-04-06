@@ -12,6 +12,8 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://user:password@localhost:5432/myappdb
     services:
       postgres:
         image: postgres:latest
@@ -46,7 +48,7 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
-          playwright install
+          playwright install --with-deps
 
       - name: Run tests
         run: |
@@ -93,8 +95,8 @@ jobs:
         with:
           push: true
           tags: |
-            jps92/is601-module9-assignment:latest
-            jps92/is601-module9-assignment:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/is601-module10-assignment:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/is601-module10-assignment:${{ github.sha }}
           platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=jps92/is601-module9-assignment:cache
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/is601-module10-assignment:cache
           cache-to: type=inline,mode=max
