@@ -2,62 +2,55 @@
 
 ## Overview
 This project is a web calculator built with FastAPI.
-It provides:
+
+It includes:
 - A browser UI with two number inputs and operation buttons
 - REST API endpoints for add, subtract, multiply, and divide
 - Input validation and structured error handling
 - Logging for successful operations and errors
+- A minimal secure user model (SQLAlchemy + Pydantic) for Module 10
+- Password hashing + verification (bcrypt via Passlib)
 - Automated testing with unit, integration, and end-to-end tests
 - Docker support and GitHub Actions CI/CD
-
-## Features
-- Server-rendered homepage at /
-- API endpoints:
-  - POST /add
-  - POST /subtract
-  - POST /multiply
-  - POST /divide
-- JSON request body format:
-
-```json
-{
-  "a": 10,
-  "b": 5
-}
-```
-
-- JSON success response format:
-
-```json
-{
-  "result": 15
-}
-```
-
-- JSON error response format:
-
-```json
-{
-  "error": "Cannot divide by zero!"
-}
-```
 
 ## Project Structure
 
 ```text
-is601-module9-assignment/
+is601-module10-assignment/
 ├── app/
-│   └── operations/
-│       └── __init__.py
+│   ├── auth/
+│   │   ├── __init__.py
+│   │   └── security.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── operations/
+│   │   └── __init__.py
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── __init__.py
+│   ├── config.py
+│   ├── database.py
+│   └── database_init.py
 ├── templates/
 │   └── index.html
 ├── tests/
+│   ├── __init__.py
 │   ├── conftest.py
 │   ├── unit/
-│   │   └── test_calculator.py
+│   │   ├── test_calculator.py
+│   │   ├── test_database.py
+│   │   ├── test_database_init.py
+│   │   ├── test_security.py
+│   │   ├── test_user_model.py
+│   │   └── test_user_schema.py
 │   ├── integration/
-│   │   └── test_fastapi_calculator.py
+│   │   ├── conftest.py
+│   │   ├── test_fastapi_calculator.py
+│   │   └── test_user_database.py
 │   └── e2e/
+│       ├── conftest.py
 │       └── test_e2e.py
 ├── .github/workflows/
 │   └── ci.yml
@@ -106,14 +99,36 @@ docker compose up --build
 docker compose up --build -d
 ```
 
-### 3. Stop containers
+### 3. Open in browser
+- http://127.0.0.1:8000
+
+### 4. Stop containers
 
 ```powershell
 docker compose down
 ```
 
-### 4. Open in browser
-- http://localhost:8000
+## Run Tests Locally (Brief)
+All commands below assume your virtual environment is activated.
+
+### Unit tests
+```powershell
+python -m pytest tests\unit -q
+```
+
+### Integration tests (requires a real Postgres database)
+Integration tests require `DATABASE_URL`.
+
+Example:
+```powershell
+$env:DATABASE_URL = "postgresql://user:password@localhost:5432/myappdb"
+python -m pytest tests\integration -q
+```
+
+### End-to-end (E2E) tests
+```powershell
+python -m pytest tests\e2e -q
+```
 
 ## CI/CD
 - GitHub Actions runs the pipeline on push and pull request events for main.
@@ -121,4 +136,4 @@ docker compose down
 - On successful deploy from main, a new Docker image is pushed to Docker Hub.
 
 Docker Hub repository:
-- https://hub.docker.com/r/jps92/is601-module9-assignment
+- https://hub.docker.com/r/jps92/is601-module10-assignment
