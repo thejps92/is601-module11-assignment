@@ -8,7 +8,9 @@ It includes:
 - REST API endpoints for add, subtract, multiply, and divide
 - Input validation and structured error handling
 - Logging for successful operations and errors
-- A minimal secure user model (SQLAlchemy + Pydantic) for Module 10
+- A minimal secure user model (SQLAlchemy + Pydantic)
+- A Calculation model + schemas (SQLAlchemy + Pydantic)
+- An factory for selecting calculation logic (Add/Sub/Multiply/Divide)
 - Password hashing + verification (bcrypt via Passlib)
 - Automated testing with unit, integration, and end-to-end tests
 - Docker support and GitHub Actions CI/CD
@@ -16,18 +18,21 @@ It includes:
 ## Project Structure
 
 ```text
-is601-module10-assignment/
+is601-module11-assignment/
 ├── app/
 │   ├── auth/
 │   │   ├── __init__.py
 │   │   └── security.py
 │   ├── models/
 │   │   ├── __init__.py
+│   │   ├── calculation.py
 │   │   └── user.py
 │   ├── operations/
+│   │   ├── factory.py
 │   │   └── __init__.py
 │   ├── schemas/
 │   │   ├── __init__.py
+│   │   ├── calculation.py
 │   │   └── user.py
 │   ├── __init__.py
 │   ├── config.py
@@ -40,13 +45,19 @@ is601-module10-assignment/
 │   ├── conftest.py
 │   ├── unit/
 │   │   ├── test_calculator.py
+│   │   ├── test_calculation_factory.py
+│   │   ├── test_calculation_model.py
+│   │   ├── test_calculation_model_errors.py
+│   │   ├── test_calculation_schema.py
 │   │   ├── test_database.py
 │   │   ├── test_database_init.py
+│   │   ├── test_main_api.py
 │   │   ├── test_security.py
 │   │   ├── test_user_model.py
 │   │   └── test_user_schema.py
 │   ├── integration/
 │   │   ├── conftest.py
+│   │   ├── test_calculation_database.py
 │   │   ├── test_fastapi_calculator.py
 │   │   └── test_user_database.py
 │   └── e2e/
@@ -125,6 +136,8 @@ $env:DATABASE_URL = "postgresql://user:password@localhost:5432/myappdb"
 python -m pytest tests\integration -q
 ```
 
+Note: if `DATABASE_URL` is not set, integration tests are skipped.
+
 ### End-to-end (E2E) tests
 ```powershell
 python -m pytest tests\e2e -q
@@ -136,4 +149,4 @@ python -m pytest tests\e2e -q
 - On successful deploy from main, a new Docker image is pushed to Docker Hub.
 
 Docker Hub repository:
-- https://hub.docker.com/r/jps92/is601-module10-assignment
+- https://hub.docker.com/r/jps92/is601-module11-assignment
