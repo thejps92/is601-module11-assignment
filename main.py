@@ -23,11 +23,16 @@ class OperationRequest(BaseModel):
     a: float = Field(..., description="The first number")
     b: float = Field(..., description="The second number")
 
-    @field_validator('a', 'b')  # Correct decorator for Pydantic 1.x
+    @field_validator("a", "b", mode="before")
     def validate_numbers(cls, value):
-        if not isinstance(value, (int, float)):
-            raise ValueError('Both a and b must be numbers.')
-        return value
+        if isinstance(value, (int, float)):
+            return value
+        if isinstance(value, str):
+            try:
+                return float(value)
+            except ValueError:
+                pass
+        raise ValueError("Both a and b must be numbers.")
 
 # Pydantic model for successful response
 class OperationResponse(BaseModel):
@@ -124,5 +129,5 @@ async def divide_route(operation: OperationRequest):
         logger.error(f"Divide Operation Internal Error: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     uvicorn.run(app, host="127.0.0.1", port=8000)
