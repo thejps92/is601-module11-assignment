@@ -54,9 +54,9 @@ jobs:
         run: |
           source venv/bin/activate
           mkdir -p test-results
-          pytest tests/unit/ --cov=app --junitxml=test-results/junit.xml
-          pytest tests/integration/
-          pytest tests/e2e/
+          pytest tests/unit/ --junitxml=test-results/junit.xml
+          pytest tests/integration/ --cov-append
+          pytest tests/e2e/ --cov-append
 
   security:
     needs: test
