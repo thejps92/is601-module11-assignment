@@ -15,14 +15,16 @@ def _get_test_database_url() -> str | None:
 def test_engine():
     database_url = _get_test_database_url()
     if not database_url:
-        raise RuntimeError(
+        pytest.skip(
             "DATABASE_URL is not set; integration tests require a real database. "
-            "Set DATABASE_URL to a Postgres connection string."
+            "Set DATABASE_URL to a Postgres connection string.",
+            allow_module_level=True,
         )
 
     engine = create_engine(database_url)
 
     import app.models.user  # noqa: F401
+    import app.models.calculation  # noqa: F401
 
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
